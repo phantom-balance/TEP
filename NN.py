@@ -12,10 +12,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Hyperparameters
 input_size = 52
 Type = [0, 1]
-num_classes = 2
+num_classes = 2 # requires to be converted to num_classes = len(Type) to change according to the number of files sent to training and testing
 learning_rate = 0.001
 num_epochs = 3
 batch_size = 13
+load_model = True
 
 
 class NN(nn.Module):
@@ -34,6 +35,7 @@ class NN(nn.Module):
         x = self.fc3(x)
         return x
 
+
 model=NN(input_size=input_size, num_classes=num_classes).to(device=device)
 
 # Load Data
@@ -45,6 +47,19 @@ test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 # Loss and Optimizer
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Saving and Loading the model parameters
+def save_checkpoint(state, filename="NN_TEP.pth.tar"):
+    print("__Saving Checkpoint__")
+    torch.save(state, filename)
+
+def load_checkpoint(checkpoint):
+    print("__Loading Checkpoint__")
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+if load_model == True:
+    load_checkpoint(torch.load("NN_TEP.pth.tar"))
 
 # Training Network
 for epoch in range(num_epochs):
@@ -59,6 +74,12 @@ for epoch in range(num_epochs):
         loss.backward()
 
         optimizer.step()
+
+    if epoch % 2 == 0:
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer': optimizer.state_dict()
+                      }
+        save_checkpoint(checkpoint)
 
 
 # Testing accuracy
