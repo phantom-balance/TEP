@@ -36,7 +36,7 @@ class NN(nn.Module):
         return x
 
 
-model=NN(input_size=input_size, num_classes=num_classes).to(device=device)
+model = NN(input_size=input_size, num_classes=num_classes).to(device=device)
 
 # Load Data
 train_set = TEP(num=Type, is_train=True)
@@ -48,15 +48,18 @@ test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+
 # Saving and Loading the model parameters
 def save_checkpoint(state, filename="NN_TEP.pth.tar"):
     print("__Saving Checkpoint__")
     torch.save(state, filename)
 
+
 def load_checkpoint(checkpoint):
     print("__Loading Checkpoint__")
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
+
 
 if load_model == True:
     load_checkpoint(torch.load("NN_TEP.pth.tar"))
@@ -99,6 +102,7 @@ def check_accuracy(loader, model):
             num_samples += predictions.size(0)
         print(f'In training dataset Got {num_correct}/{num_samples} with accuracy {float(num_correct)/float(num_samples)*100:.2f}')
     model.train()
+
 
 print("Checking accuracy on Training Set")
 check_accuracy(train_loader, model)
