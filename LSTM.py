@@ -6,6 +6,7 @@ from seqloader import TEP
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 class LSTM(nn.Module):
     def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
         super(LSTM,self).__init__()
@@ -23,6 +24,7 @@ class LSTM(nn.Module):
         out = self.fc(out)
         return out
 
+
 input_size = 52
 sequence_length = 10
 Type = [0, 1]
@@ -32,6 +34,7 @@ hidden_size = 100
 learning_rate = 0.001
 num_epochs = 1
 batch_size = 10
+load_model = False
 
 model=LSTM(input_size=input_size,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
@@ -43,7 +46,22 @@ test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
 
-for epochs in range(num_epochs):
+
+def save_checkpoint(state, filename="LSTM_TEP.pth.tar"):
+    print("__Saving Checkpoint__")
+    torch.save(state, filename)
+
+
+def load_checkpoint(checkpoint):
+    print("__Loading Checkpoint__")
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+
+if load_model == True:
+    load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
+
+for epoch in range(num_epochs):
     for batch_idx, (data, targets) in enumerate(train_loader):
         data = data.to(device=device).squeeze(1)
         targets = targets.to(device=device)
@@ -53,10 +71,16 @@ for epochs in range(num_epochs):
         loss.backward()
         optimizer.step()
 
+    if epoch % 2 == 0:
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer': optimizer.state_dict()
+                      }
+        save_checkpoint(checkpoint)
+
 
 def check_accuracy(loader,model):
-    num_correct=0
-    num_samples=0
+    num_correct = 0
+    num_samples = 0
     model.eval()
     with torch.no_grad():
         for Data, Targets in loader:
@@ -64,12 +88,13 @@ def check_accuracy(loader,model):
             Targets = Targets.to(device=device)
             scores = model(Data)
 
-            _,prediction = scores.max(1)
-            num_correct+=(prediction==Targets).sum()
-            num_samples+=prediction.size(0)
+            _, prediction = scores.max(1)
+            num_correct += (prediction==Targets).sum()
+            num_samples += prediction.size(0)
 
         print(f'Got {num_correct}/{num_samples} correct, prediction rate={float(num_correct)/float(num_samples)*100:.3f}')
     model.train()
+
 
 print("Checking accuracy on Training Set")
 check_accuracy(train_loader, model)
