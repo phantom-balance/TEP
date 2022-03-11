@@ -15,7 +15,7 @@ def get_data(list, is_train=None):
 
             else:
                 m = []
-                for i in range(0,480):
+                for i in range(480):
                     m.append(num)
                 k.extend([[data],[m]])
 
