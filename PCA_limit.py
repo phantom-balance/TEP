@@ -44,6 +44,7 @@ class PCA():
         self.UCL_Q = torch.quantile(Q, self.confidence)
         self.truncated_eigen_vectors = truncated_eigen_vectors
         self.truncated_eigen_values = truncated_eigen_values
+        self.num_components = num_components
 
     def return_func(self):
         Data_List = []
@@ -72,8 +73,5 @@ class PCA():
             Data_Tuple = (T2_data1, T2_data2)
             Data_List.append(Data_Tuple)
 
-        return self.UCL_T2, self.UCL_Q, Data_List
+        return self.num_components, self.UCL_T2, self.UCL_Q, Data_List
 
-
-crap = PCA(Type=[0,1,2], var_explained=0.55, confidence=0.99)
-print(crap.return_func())
