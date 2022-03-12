@@ -52,7 +52,6 @@ class PCA():
             data_path1 = os.path.join('TEP-profbraatz-dataset/', ('d0' if num<10 else 'd')+str(num)+".csv")
             data1 = pd.read_csv(data_path1)
             data_path2 = os.path.join('TEP-profbraatz-dataset/', ('d0' if num<10 else 'd')+str(num)+"_te.csv")
-            data2 = pd.read_csv(data_path2)
             data1_norm = data1.copy()
             for i in data1_norm:
                 data1_norm[i] = (data1_norm[i]-self.mean[i])/(self.std[i])
@@ -61,7 +60,14 @@ class PCA():
             T2_PCA1 = torch.pow(PCA1, 2)
             T2_PCA1 = torch.div(T2_PCA1, self.truncated_eigen_values)
             T2_data1 = torch.sum(T2_PCA1, dim=1).type(torch.double)
+            data1_approximation = torch.mm(PCA1, torch.transpose(self.truncated_eigen_vectors, 0, 1))
+            residual_data1 = data1_norm - data1_approximation
+            Q = torch.mm(residual_data1, torch.transpose(residual_data1, 0, 1))
+            Q_data1 = torch.diagonal(Q)
+            Tuple_train = (T2_data1,Q_data1)
+            Data_List.append(Tuple_train)
 
+            data2 = pd.read_csv(data_path2)
             data2_norm = data2.copy()
             for i in data2_norm:
                 data2_norm[i] = (data2_norm[i]-self.mean[i])/(self.std[i])
@@ -70,8 +76,12 @@ class PCA():
             T2_PCA2 = torch.pow(PCA2, 2)
             T2_PCA2 = torch.div(T2_PCA2, self.truncated_eigen_values)
             T2_data2 = torch.sum(T2_PCA2, dim=1).type(torch.double)
-            Data_Tuple = (T2_data1, T2_data2)
-            Data_List.append(Data_Tuple)
+            data2_approximation = torch.mm(PCA2, torch.transpose(self.truncated_eigen_vectors, 0, 1))
+            residual_data2 = data2_norm - data2_approximation
+            Q = torch.mm(residual_data2, torch.transpose(residual_data2, 0, 1))
+            Q_data2 = torch.diagonal(Q)
+            Tuple_test = (T2_data2,Q_data2)
+            Data_List.append(Tuple_test)
 
         return self.num_components, self.UCL_T2, self.UCL_Q, Data_List
 
