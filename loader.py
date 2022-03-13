@@ -1,7 +1,13 @@
 from getdata import get_data
 import torch
 from torch.utils.data import Dataset
-
+"""
+__getitem__
+seperates each row from the data returned along with it's label from the 
+value returned from getdata.get_data for DataLoader for Pytorch
+__len__
+returns the number of total data labels for DataLoader for Pytorch
+"""
 
 class TEP(Dataset):
     def __init__(self, num, is_train=None):
