@@ -10,7 +10,7 @@ will return ([data1],[labels-for-data1],[data2],[labels-for-data2])
 [labels-for-data1]--->[1,1,......,1]{480 labels, labeled 1}
 when is_trian=False:
 [data1]--->[d01_te.csv]
-[labels-for-data1]--->[1,1,......,1]{160 labels 0, 161 to 960 labeled 1}
+[labels-for-data1]--->[0,0,......,1,1]{160 labels 0, 161 to 960 labeled 1}
 '''
 
 
