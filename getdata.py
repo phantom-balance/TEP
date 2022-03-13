@@ -3,6 +3,7 @@ import pandas as pd
 '''
 Returns Data inside a list and the labels for every time step of the Data in a list in that order.
 example:
+when is_train=True
 get_data([1], is_train=....)
 [data1]--->[d01.csv] 
 [labels-for-data1]--->[1,1,......,1]{480 labels, labeled 1}
