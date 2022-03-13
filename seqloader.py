@@ -1,7 +1,14 @@
 from getdata import get_data
 import torch
 from torch.utils.data import Dataset
-
+"""
+__getitem__
+seperates each row from the data and stacks them according to the sequence_length
+along with the label from the last data_instance from the value returned from 
+getdata.get_data for DataLoader for Pytorch
+__len__
+returns the number of total data labels for DataLoader for Pytorch
+"""
 class TEP(Dataset):
     def __init__(self, num, sequence_length, is_train=None):
         self.Lis = get_data(num, is_train=is_train)
