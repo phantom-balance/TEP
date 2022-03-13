@@ -3,8 +3,9 @@ import torch
 from torch.utils.data import Dataset
 """
 __getitem__
-seperates each row from the data returned along with it's label from the 
+seperates each row from the data along with it's label from the 
 value returned from getdata.get_data for DataLoader for Pytorch
+return data_instance
 __len__
 returns the number of total data labels for DataLoader for Pytorch
 """
