@@ -1,5 +1,18 @@
 import os
 import pandas as pd
+'''
+Returns Data inside a list and the labels for every time step
+of the Data in a list in that order.
+example:
+get_data([1,2], is_train=True) 
+will return ([data1],[labels-for-data1],[data2],[labels-for-data2])
+[data1]--->[d01.csv] 
+[labels-for-data1]--->[1,1,......,1]{480 labels, labeled 1}
+when is_trian=False:
+[data1]--->[d01_te.csv]
+[labels-for-data1]--->[1,1,......,1]{160 labels 0, 161 to 960 labeled 1}
+'''
+
 
 def get_data(list, is_train=None):
     if is_train==True:
