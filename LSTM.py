@@ -26,13 +26,13 @@ class LSTM(nn.Module):
 
 
 input_size = 52
-sequence_length = 10
-Type = [0, 1]
+sequence_length = 5
+Type = [1,2]
 num_classes = 22
 num_layers = 2
-hidden_size = 100
+hidden_size = 30
 learning_rate = 0.001
-num_epochs = 1
+num_epochs = 2
 batch_size = 10
 load_model = False
 
@@ -40,8 +40,10 @@ model=LSTM(input_size=input_size,sequence_length=sequence_length,hidden_size=hid
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
+# print("train_set",train_set[476])
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
+# print("test_set",test_set[1112])
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
@@ -60,22 +62,6 @@ def load_checkpoint(checkpoint):
 
 if load_model == True:
     load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
-
-for epoch in range(num_epochs):
-    for batch_idx, (data, targets) in enumerate(train_loader):
-        data = data.to(device=device).squeeze(1)
-        targets = targets.to(device=device)
-        scores = model(data)
-        loss = criterion(scores,targets)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-    if epoch % 2 == 0:
-        checkpoint = {'state_dict': model.state_dict(),
-                      'optimizer': optimizer.state_dict()
-                      }
-        save_checkpoint(checkpoint)
 
 
 def check_accuracy(loader,model):
@@ -96,7 +82,27 @@ def check_accuracy(loader,model):
     model.train()
 
 
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, model)
+
+for epoch in range(num_epochs):
+    for batch_idx, (data, targets) in enumerate(train_loader):
+        data = data.to(device=device).squeeze(1)
+        targets = targets.to(device=device)
+        scores = model(data)
+        loss = criterion(scores,targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    if epoch % 2 == 0:
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer': optimizer.state_dict()
+                      }
+        save_checkpoint(checkpoint)
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, model)
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, model)
+
+
+
+

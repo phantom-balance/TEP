@@ -12,11 +12,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Hyperparameters
 input_size = 52
 Type = [0, 1]
-num_classes = 2 # requires to be converted to num_classes = len(Type) to change according to the number of files sent to training and testing
+num_classes = 3 # requires to be converted to num_classes = len(Type) to change according to the number of files sent to training and testing
 learning_rate = 0.001
 num_epochs = 3
 batch_size = 13
-load_model = True
+load_model = False
 
 
 class NN(nn.Module):
