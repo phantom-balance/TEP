@@ -6,7 +6,6 @@ from seqloader import TEP
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 class GRU(nn.Module):
     def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
         super(GRU,self).__init__()
@@ -98,7 +97,6 @@ for epoch in range(num_epochs):
         check_accuracy(train_loader, model)
         print("Checking accuracy on Testing Set")
         check_accuracy(test_loader, model)
-
 
 if num_epochs == 0:
     print("Checking accuracy on Training Set")
