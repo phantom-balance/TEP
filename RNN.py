@@ -25,13 +25,13 @@ class RNN(nn.Module):
 
 
 input_size = 52
-sequence_length = 10
-Type = [0, 1]
+sequence_length = 5
+Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
 num_layers = 2
 hidden_size = 100
 learning_rate = 0.001
-num_epochs = 1
+num_epochs = 10
 batch_size = 10
 load_model = False
 
@@ -60,22 +60,6 @@ def load_checkpoint(checkpoint):
 if load_model == True:
     load_checkpoint(torch.load("RNN_TEP.pth.tar"))
 
-for epoch in range(num_epochs):
-    for batch_idx, (data, targets) in enumerate(train_loader):
-        data = data.to(device=device).squeeze(1)
-        targets = targets.to(device=device)
-        scores = model(data)
-        loss = criterion(scores,targets)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-    if epoch % 2 == 0:
-        checkpoint = {'state_dict': model.state_dict(),
-                      'optimizer': optimizer.state_dict()
-                      }
-        save_checkpoint(checkpoint)
-
 
 def check_accuracy(loader, model):
     num_correct = 0
@@ -95,7 +79,30 @@ def check_accuracy(loader, model):
     model.train()
 
 
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, model)
+for epoch in range(num_epochs):
+    for batch_idx, (data, targets) in enumerate(train_loader):
+        data = data.to(device=device).squeeze(1)
+        targets = targets.to(device=device)
+        scores = model(data)
+        loss = criterion(scores,targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    if epoch % 2 == 0:
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer': optimizer.state_dict()
+                      }
+        save_checkpoint(checkpoint)
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, model)
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, model)
+
+
+if num_epochs == 0:
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, model)
+
