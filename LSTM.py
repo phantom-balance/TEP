@@ -102,6 +102,8 @@ for epoch in range(num_epochs):
         print("Checking accuracy on Testing Set")
         check_accuracy(test_loader, model)
 
-
-
-
+if num_epochs == 0:
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, model)
