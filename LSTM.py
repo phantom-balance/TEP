@@ -6,7 +6,6 @@ from seqloader import TEP
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 class LSTM(nn.Module):
     def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
         super(LSTM,self).__init__()
@@ -27,12 +26,12 @@ class LSTM(nn.Module):
 
 input_size = 52
 sequence_length = 5
-Type = [1,2]
+Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
 num_layers = 2
 hidden_size = 30
 learning_rate = 0.001
-num_epochs = 2
+num_epochs = 10
 batch_size = 10
 load_model = False
 
