@@ -103,4 +103,3 @@ if num_epochs == 0:
     check_accuracy(train_loader, model)
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, model)
-
