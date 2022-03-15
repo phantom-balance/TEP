@@ -81,7 +81,6 @@ def check_accuracy(loader,model):
     model.train()
 
 
-
 for epoch in range(num_epochs):
     for batch_idx, (data, targets) in enumerate(train_loader):
         data = data.to(device=device).squeeze(1)
