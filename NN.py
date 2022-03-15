@@ -11,11 +11,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Hyperparameters
 input_size = 52
-Type = [0, 1]
-num_classes = 3 # requires to be converted to num_classes = len(Type) to change according to the number of files sent to training and testing
+Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+num_classes = 22
 learning_rate = 0.001
-num_epochs = 3
-batch_size = 13
+num_epochs = 10
+batch_size = 10
 load_model = False
 
 
@@ -64,26 +64,6 @@ def load_checkpoint(checkpoint):
 if load_model == True:
     load_checkpoint(torch.load("NN_TEP.pth.tar"))
 
-# Training Network
-for epoch in range(num_epochs):
-    for batch_idx, (data, targets) in enumerate(train_loader):
-        data = data.to(device=device)
-        targets = targets.to(device=device)
-
-        scores = model(data)
-        loss = criterion(scores, targets)
-
-        optimizer.zero_grad()
-        loss.backward()
-
-        optimizer.step()
-
-    if epoch % 2 == 0:
-        checkpoint = {'state_dict': model.state_dict(),
-                      'optimizer': optimizer.state_dict()
-                      }
-        save_checkpoint(checkpoint)
-
 
 # Testing accuracy
 def check_accuracy(loader, model):
@@ -104,7 +84,32 @@ def check_accuracy(loader, model):
     model.train()
 
 
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, model)
+# Training Network
+for epoch in range(num_epochs):
+    for batch_idx, (data, targets) in enumerate(train_loader):
+        data = data.to(device=device)
+        targets = targets.to(device=device)
+
+        scores = model(data)
+        loss = criterion(scores, targets)
+
+        optimizer.zero_grad()
+        loss.backward()
+
+        optimizer.step()
+
+    if epoch % 2 == 0:
+        checkpoint = {'state_dict': model.state_dict(),
+                      'optimizer': optimizer.state_dict()
+                      }
+        save_checkpoint(checkpoint)
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, model)
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, model)
+
+if num_epochs == 0:
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, model)
