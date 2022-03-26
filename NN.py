@@ -115,6 +115,7 @@ def summary_return(DATA):
     if DATA == "train":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(Test_loader):
+                print(str((batch_idx*batch_size)/len(train_set))+" completed")
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
@@ -130,6 +131,7 @@ def summary_return(DATA):
     elif DATA == "test":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(Train_loader):
+                print(str((batch_idx*batch_size)/len(train_set))+" completed")
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
