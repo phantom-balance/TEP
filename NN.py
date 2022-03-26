@@ -14,7 +14,7 @@ input_size = 52
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
 learning_rate = 0.001
-num_epochs = 2
+num_epochs = 50
 batch_size = 10
 load_model = False
 
@@ -45,79 +45,101 @@ model = NN(input_size=input_size, num_classes=num_classes).to(device=device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+
+# Saving and Loading the model parameters
+def save_checkpoint(state, filename="NN_TEP.pth.tar"):
+    print("__Saving Checkpoint__")
+    torch.save(state, filename)
+
+
+def load_checkpoint(checkpoint):
+    print("__Loading Checkpoint__")
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+
+# Testing accuracy
+def check_accuracy(loader, model):
+    num_correct = 0
+    num_samples = 0
+
+    model.eval()
+
+    with torch.no_grad():
+        for Data, Targets in loader:
+            Data = Data.to(device=device)
+            Targets = Targets.to(device=device)
+            scores = model(Data)
+            _, predictions = scores.max(1)
+            num_correct += (predictions==Targets).sum()
+            num_samples += predictions.size(0)
+        print(f'In training dataset Got {num_correct}/{num_samples} with accuracy {float(num_correct)/float(num_samples)*100:.2f}')
+    model.train()
+
+
 if __name__ == '__main__':
     # Load Data
     train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
-    # Saving and Loading the model parameters
-    def save_checkpoint(state, filename="NN_TEP.pth.tar"):
-        print("__Saving Checkpoint__")
-        torch.save(state, filename)
-
-
-    def load_checkpoint(checkpoint):
-        print("__Loading Checkpoint__")
-        model.load_state_dict(checkpoint['state_dict'])
-        optimizer.load_state_dict(checkpoint['optimizer'])
-
-
     if load_model == True:
         load_checkpoint(torch.load("NN_TEP.pth.tar"))
 
-    # Testing accuracy
-    def check_accuracy(loader, model):
-        num_correct = 0
-        num_samples = 0
-
-        model.eval()
-
-        with torch.no_grad():
-            for Data, Targets in loader:
-                Data = Data.to(device=device)
-                Targets = Targets.to(device=device)
-                scores = model(Data)
-                _, predictions = scores.max(1)
-                num_correct += (predictions==Targets).sum()
-                num_samples += predictions.size(0)
-            print(f'In training dataset Got {num_correct}/{num_samples} with accuracy {float(num_correct)/float(num_samples)*100:.2f}')
-        model.train()
-
-
     # Training Network
     for epoch in range(num_epochs):
-        for batch_idx, (data, targets) in enumerate(train_loader):
-            data = data.to(device=device)
-            targets = targets.to(device=device)
+        # for batch_idx, (data, targets) in enumerate(train_loader):
+        data, targets = next(iter(train_loader))
+        data = data.to(device=device)
+        targets = targets.to(device=device)
+        scores = model(data)
+        loss = criterion(scores, targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-            scores = model(data)
-            loss = criterion(scores, targets)
-
-            optimizer.zero_grad()
-            loss.backward()
-
-            optimizer.step()
-
-        if epoch % 2 == 0:
+        if epoch % 5 == 0:
             checkpoint = {'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()
                           }
             save_checkpoint(checkpoint)
-            print("Checking accuracy on Training Set")
-            check_accuracy(train_loader, model)
-            print("Checking accuracy on Testing Set")
-            check_accuracy(test_loader, model)
-
-    if num_epochs == 0:
-        print("Checking accuracy on Training Set")
-        check_accuracy(train_loader, model)
-        print("Checking accuracy on Testing Set")
-        check_accuracy(test_loader, model)
 
 
 # for performance_metric
-def summary_return():
-    path = "NN_TEP.pth.tar"
+def summary_return(DATA):
     Train_loader = DataLoader(dataset=train_set, batch_size=len(train_set), shuffle=False)
     Test_loader = DataLoader(dataset=test_set, batch_size=len(test_set), shuffle=False)
-    return model, path, Train_loader, Test_loader
+    y_true = []
+    y_pred = []
+    y_prob = torch.double
+
+    load_checkpoint(torch.load("NN_TEP.pth.tar"))
+
+    if DATA == "train":
+        with torch.no_grad():
+            for data, labels in Test_loader:
+                data = data.to(device=device)
+                labels = labels.to(device=device)
+                scores = model(data)
+                prob = nn.Softmax(dim=1)
+                y_prob = prob(scores)
+                _, predictions = scores.max(1)
+                y_pred.extend(predictions)
+                y_true.extend(labels)
+    elif DATA == "test":
+        with torch.no_grad():
+            for data, labels in Train_loader:
+                data = data.to(device=device)
+                labels = labels.to(device=device)
+                scores = model(data)
+                prob = nn.Softmax(dim=1)
+                y_prob = prob(scores)
+                _, predictions = scores.max(1)
+                y_pred.extend(predictions)
+                y_true.extend(labels)
+
+    return y_true, y_pred, y_prob
+
+# print("Checking accuracy on Training Set")
+# check_accuracy(train_loader, model)
+# print("Checking accuracy on Testing Set")
+# check_accuracy(test_loader, model)
