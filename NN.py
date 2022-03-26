@@ -14,8 +14,8 @@ input_size = 52
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
 learning_rate = 0.001
-num_epochs = 50
-batch_size = 10
+num_epochs = 100
+batch_size = 50
 load_model = True
 
 

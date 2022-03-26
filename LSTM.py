@@ -32,8 +32,8 @@ num_classes = 22
 num_layers = 2
 hidden_size = 40
 learning_rate = 0.001
-num_epochs = 10
-batch_size = 10
+num_epochs = 100
+batch_size = 50
 load_model = True
 
 model=LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
