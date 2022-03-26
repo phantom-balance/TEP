@@ -7,11 +7,11 @@ from seqloader import TEP
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class LSTM(nn.Module):
-    def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
+    def __init__(self, feature_length, sequence_length, hidden_size, num_layers, num_classes):
         super(LSTM,self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(feature_length, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
 
     def forward(self, x):
@@ -24,7 +24,7 @@ class LSTM(nn.Module):
         return out
 
 
-input_size = 52
+feature_length = 52
 sequence_length = 5
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
@@ -35,74 +35,84 @@ num_epochs = 10
 batch_size = 10
 load_model = False
 
-model=LSTM(input_size=input_size,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
+model=LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
-train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
-# print("train_set",train_set[476])
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
-test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
-# print("test_set",test_set[1112])
+
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
 
 
-def save_checkpoint(state, filename="LSTM_TEP.pth.tar"):
-    print("__Saving Checkpoint__")
-    torch.save(state, filename)
+if __name__ == "__main__":
+    # Load Data
+    train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
+
+    def save_checkpoint(state, filename="LSTM_TEP.pth.tar"):
+        print("__Saving Checkpoint__")
+        torch.save(state, filename)
 
 
-def load_checkpoint(checkpoint):
-    print("__Loading Checkpoint__")
-    model.load_state_dict(checkpoint['state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
+    def load_checkpoint(checkpoint):
+        print("__Loading Checkpoint__")
+        model.load_state_dict(checkpoint['state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
 
 
-if load_model == True:
-    load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
+    if load_model == True:
+        load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
 
 
-def check_accuracy(loader,model):
-    num_correct = 0
-    num_samples = 0
-    model.eval()
-    with torch.no_grad():
-        for Data, Targets in loader:
-            Data = Data.to(device=device).squeeze(1)
-            Targets = Targets.to(device=device)
-            scores = model(Data)
+    def check_accuracy(loader,model):
+        num_correct = 0
+        num_samples = 0
+        model.eval()
+        with torch.no_grad():
+            for Data, Targets in loader:
+                Data = Data.to(device=device).squeeze(1)
+                Targets = Targets.to(device=device)
+                scores = model(Data)
 
-            _, prediction = scores.max(1)
-            num_correct += (prediction==Targets).sum()
-            num_samples += prediction.size(0)
+                _, prediction = scores.max(1)
+                num_correct += (prediction==Targets).sum()
+                num_samples += prediction.size(0)
 
-        print(f'Got {num_correct}/{num_samples} correct, prediction rate={float(num_correct)/float(num_samples)*100:.3f}')
-    model.train()
+            print(f'Got {num_correct}/{num_samples} correct, prediction rate={float(num_correct)/float(num_samples)*100:.3f}')
+        model.train()
 
 
-for epoch in range(num_epochs):
-    for batch_idx, (data, targets) in enumerate(train_loader):
-        data = data.to(device=device).squeeze(1)
-        targets = targets.to(device=device)
-        scores = model(data)
-        loss = criterion(scores,targets)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+    for epoch in range(num_epochs):
+        for batch_idx, (data, targets) in enumerate(train_loader):
+            data = data.to(device=device).squeeze(1)
+            targets = targets.to(device=device)
+            scores = model(data)
+            loss = criterion(scores,targets)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-    if epoch % 2 == 0:
-        checkpoint = {'state_dict': model.state_dict(),
-                      'optimizer': optimizer.state_dict()
-                      }
-        save_checkpoint(checkpoint)
+        if epoch % 2 == 0:
+            checkpoint = {'state_dict': model.state_dict(),
+                          'optimizer': optimizer.state_dict()
+                          }
+            save_checkpoint(checkpoint)
+            print("Checking accuracy on Training Set")
+            check_accuracy(train_loader, model)
+            print("Checking accuracy on Testing Set")
+            check_accuracy(test_loader, model)
+
+    if num_epochs == 0:
         print("Checking accuracy on Training Set")
         check_accuracy(train_loader, model)
         print("Checking accuracy on Testing Set")
         check_accuracy(test_loader, model)
 
-if num_epochs == 0:
-    print("Checking accuracy on Training Set")
-    check_accuracy(train_loader, model)
-    print("Checking accuracy on Testing Set")
-    check_accuracy(test_loader, model)
+
+# for performance_metric
+def summary_return():
+    path = "NN_TEP.pth.tar"
+    Train_loader = DataLoader(dataset=train_set, batch_size=len(train_set), shuffle=False)
+    Test_loader = DataLoader(dataset=test_set, batch_size=len(test_set), shuffle=False)
+    return model, path, Train_loader, Test_loader

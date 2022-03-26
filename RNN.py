@@ -37,69 +37,78 @@ load_model = False
 model = RNN(input_size=input_size,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
-train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
-test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
+
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
 
+if __name__ == '__main__':
+    train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
-def save_checkpoint(state, filename="RNN_TEP.pth.tar"):
-    print("__Saving Checkpoint__")
-    torch.save(state, filename)
-
-
-def load_checkpoint(checkpoint):
-    print("__Loading Checkpoint__")
-    model.load_state_dict(checkpoint['state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer'])
+    def save_checkpoint(state, filename="RNN_TEP.pth.tar"):
+        print("__Saving Checkpoint__")
+        torch.save(state, filename)
 
 
-if load_model == True:
-    load_checkpoint(torch.load("RNN_TEP.pth.tar"))
+    def load_checkpoint(checkpoint):
+        print("__Loading Checkpoint__")
+        model.load_state_dict(checkpoint['state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
 
 
-def check_accuracy(loader, model):
-    num_correct = 0
-    num_samples = 0
-    model.eval()
-    with torch.no_grad():
-        for Data, Targets in loader:
-            Data = Data.to(device=device).squeeze(1)
-            Targets = Targets.to(device=device)
-            scores = model(Data)
+    if load_model == True:
+        load_checkpoint(torch.load("RNN_TEP.pth.tar"))
 
-            _, prediction = scores.max(1)
-            num_correct += (prediction==Targets).sum()
-            num_samples += prediction.size(0)
+    def check_accuracy(loader, model):
+        num_correct = 0
+        num_samples = 0
+        model.eval()
+        with torch.no_grad():
+            for Data, Targets in loader:
+                Data = Data.to(device=device).squeeze(1)
+                Targets = Targets.to(device=device)
+                scores = model(Data)
 
-        print(f'Got {num_correct}/{num_samples} correct, prediction rate={float(num_correct)/float(num_samples)*100:.3f}')
-    model.train()
+                _, prediction = scores.max(1)
+                num_correct += (prediction==Targets).sum()
+                num_samples += prediction.size(0)
+
+            print(f'Got {num_correct}/{num_samples} correct, prediction rate={float(num_correct)/float(num_samples)*100:.3f}')
+        model.train()
 
 
-for epoch in range(num_epochs):
-    for batch_idx, (data, targets) in enumerate(train_loader):
-        data = data.to(device=device).squeeze(1)
-        targets = targets.to(device=device)
-        scores = model(data)
-        loss = criterion(scores,targets)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+    for epoch in range(num_epochs):
+        for batch_idx, (data, targets) in enumerate(train_loader):
+            data = data.to(device=device).squeeze(1)
+            targets = targets.to(device=device)
+            scores = model(data)
+            loss = criterion(scores,targets)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-    if epoch % 2 == 0:
-        checkpoint = {'state_dict': model.state_dict(),
-                      'optimizer': optimizer.state_dict()
-                      }
-        save_checkpoint(checkpoint)
+        if epoch % 2 == 0:
+            checkpoint = {'state_dict': model.state_dict(),
+                          'optimizer': optimizer.state_dict()
+                          }
+            save_checkpoint(checkpoint)
+            print("Checking accuracy on Training Set")
+            check_accuracy(train_loader, model)
+            print("Checking accuracy on Testing Set")
+            check_accuracy(test_loader, model)
+
+    if num_epochs == 0:
         print("Checking accuracy on Training Set")
         check_accuracy(train_loader, model)
         print("Checking accuracy on Testing Set")
         check_accuracy(test_loader, model)
 
-if num_epochs == 0:
-    print("Checking accuracy on Training Set")
-    check_accuracy(train_loader, model)
-    print("Checking accuracy on Testing Set")
-    check_accuracy(test_loader, model)
+
+# for performance_metric
+def summary_return():
+    path = "RNN_TEP.pth.tar"
+    Train_loader = DataLoader(dataset=train_set, batch_size=len(train_set), shuffle=False)
+    Test_loader = DataLoader(dataset=test_set, batch_size=len(test_set), shuffle=False)
+    return model, path, Train_loader, Test_loader
