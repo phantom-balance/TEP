@@ -16,7 +16,7 @@ num_classes = 22
 learning_rate = 0.001
 num_epochs = 50
 batch_size = 10
-load_model = False
+load_model = True
 
 
 class NN(nn.Module):
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         load_checkpoint(torch.load("NN_TEP.pth.tar"))
 
     # Training Network
-    for epoch in range(num_epochs):
+    for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
         # for batch_idx, (data, targets) in enumerate(train_loader):
         data, targets = next(iter(train_loader))
         data = data.to(device=device)
@@ -103,7 +103,6 @@ if __name__ == '__main__':
 
 # for performance_metric
 def summary_return(DATA):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
     Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
     load_checkpoint(torch.load("NN_TEP.pth.tar"))
@@ -114,8 +113,8 @@ def summary_return(DATA):
 
     if DATA == "train":
         with torch.no_grad():
-            for batch_idx, (data, labels) in enumerate(Test_loader):
-                print(f'{float(batch_idx*batch_size)/len(train_set):.3f} completed')
+            for batch_idx, (data, labels) in enumerate(Train_loader):
+                print(f'{float(batch_idx*batch_size)/(len(train_set)/batch_size):.3f} completed')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
@@ -130,8 +129,8 @@ def summary_return(DATA):
                 y_true.extend(labels)
     elif DATA == "test":
         with torch.no_grad():
-            for batch_idx, (data, labels) in enumerate(Train_loader):
-                print(f'{float(batch_idx*batch_size)/len(train_set):.3f} completed')
+            for batch_idx, (data, labels) in enumerate(Test_loader):
+                print(f'{float(batch_idx*batch_size)/len(test_set):.3f} completed')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
@@ -144,6 +143,8 @@ def summary_return(DATA):
                 _, predictions = scores.max(1)
                 y_pred.extend(predictions)
                 y_true.extend(labels)
+    else:
+        print("enter either test or false")
 
     return y_true, y_pred, y_prob
 
