@@ -97,10 +97,6 @@ if __name__ == '__main__':
                           'optimizer': optimizer.state_dict()
                           }
             save_checkpoint(checkpoint)
-            print("Checking accuracy on Training Set")
-            check_accuracy(train_loader, model)
-            print("Checking accuracy on Testing Set")
-            check_accuracy(test_loader, model)
 
 
 # for performance_metric
