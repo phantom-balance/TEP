@@ -104,8 +104,8 @@ if __name__ == '__main__':
 # for performance_metric
 def summary_return(DATA):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    Train_loader = DataLoader(dataset=train_set, batch_size=len(train_set), shuffle=False)
-    Test_loader = DataLoader(dataset=test_set, batch_size=len(test_set), shuffle=False)
+    Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
+    Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
     y_true = []
     y_pred = []
     y_prob = torch.double
@@ -119,7 +119,8 @@ def summary_return(DATA):
                 labels = labels.to(device=device)
                 scores = model(data)
                 prob = nn.Softmax(dim=1)
-                y_prob = prob(scores)
+                y_prob_temp = prob(scores)
+                y_prob = torch.cat((y_prob,y_prob_temp), dim=0)
                 _, predictions = scores.max(1)
                 y_pred.extend(predictions)
                 y_true.extend(labels)
