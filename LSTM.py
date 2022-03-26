@@ -103,7 +103,6 @@ if __name__ == "__main__":
 
 # for performance_metric
 def summary_return(DATA):
-    path = "NN_TEP.pth.tar"
     Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
     Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
     load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
