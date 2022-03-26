@@ -119,7 +119,7 @@ def summary_return(DATA):
     if DATA == "train":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(Train_loader):
-                print(f'{float(batch_idx*batch_size)/(len(train_set)/batch_size):.3f} completed')
+                print(f'{float(batch_idx)/(len(train_set)/batch_size):.3f} completed')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
@@ -135,7 +135,7 @@ def summary_return(DATA):
     elif DATA == "test":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(Test_loader):
-                print(f'{float(batch_idx*batch_size)/len(test_set):.3f} completed')
+                print(f'{float(batch_idx)/(len(test_set)/batch_size):.3f} completed')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = model(data)
