@@ -32,13 +32,15 @@ def get_data(list, is_train=None):
                m = []
                for i in range (500):
                    m.append(0)
-               k.extend([[data_norm],[m]])
+               # k.extend([[data],[m]]) # returning the data directly
+               k.extend([[data_norm],[m]]) # returning normalized data using mean and standard deviation of training normal operating condition
 
             else:
                 m = []
                 for i in range(480):
                     m.append(num)
-                k.extend([[data_norm],[m]])
+               # k.extend([[data],[m]]) # returning the data directly
+                k.extend([[data_norm],[m]]) # returning normalized data using mean and standard deviation of training normal operating condition
 
     else:
         k = []
@@ -53,7 +55,9 @@ def get_data(list, is_train=None):
                 m = []
                 for i in range(960):
                     m.append(0)
-                k.extend([[data_norm],[m]])
+               # k.extend([[data],[m]]) # returning the data directly
+                k.extend([[data_norm],[m]]) # returning normalized data using mean and standard deviation of training normal operating condition
+
 
             else:
                 m = []
@@ -61,7 +65,7 @@ def get_data(list, is_train=None):
                     m.append(0)
                 for i in range(160,960):
                     m.append(num)
-                k.extend([[data_norm],[m]])
+               # k.extend([[data],[m]]) # returning the data directly
+                k.extend([[data_norm],[m]]) # returning normalized data using mean and standard deviation of training normal operating condition
 
     return k
-
