@@ -78,6 +78,11 @@ def rnn_load_checkpoint(checkpoint):
 
 
 def rnn_summary_return(DATA):
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, rnn_model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, rnn_model)
+    
     rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
 
     y_true = []
