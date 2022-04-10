@@ -16,7 +16,7 @@ num_layers = 2
 hidden_size = 40
 learning_rate = 0.001
 num_epochs = 0
-batch_size = 5
+batch_size = 100
 load_model = True
 small_data_size = 5
 
