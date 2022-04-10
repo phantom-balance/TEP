@@ -27,8 +27,6 @@ test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
 
 train_loader = DataLoader(dataset=small_train_set, batch_size=batch_size, shuffle=True)
-dat, lab = next(iter(train_loader))
-print(dat.shape)
 test_loader = DataLoader(dataset=small_test_set, batch_size=batch_size, shuffle=True)
 
 
@@ -77,17 +75,6 @@ def rnn_load_checkpoint(checkpoint):
     print("__Loading RNN Checkpoint__")
     rnn_model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
-
-
-rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
-
-print(rnn_model)
-print("Number of parameters: ", sum(p.numel() for p in rnn_model.parameters()))
-
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, rnn_model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, rnn_model)
 
 
 def rnn_summary_return(DATA):
@@ -163,17 +150,6 @@ def lstm_load_checkpoint(checkpoint):
     print("__Loading LSTM Checkpoint__")
     lstm_model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
-
-
-lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
-
-print(lstm_model)
-print("Number of parameters: ", sum(p.numel() for p in lstm_model.parameters()))
-
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, lstm_model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, lstm_model)
 
 
 def lstm_summary_return(DATA):
@@ -255,17 +231,6 @@ def gru_load_checkpoint(checkpoint):
     optimizer.load_state_dict(checkpoint['optimizer'])
 
 
-gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
-
-print(gru_model)
-print("Number of parameters: ", sum(p.numel() for p in gru_model.parameters()))
-
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, gru_model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, gru_model)
-
-
 def gru_summary_return(DATA):
     print("Checking accuracy on Training Set")
     check_accuracy(train_loader, gru_model)
@@ -315,3 +280,28 @@ def gru_summary_return(DATA):
 
     return y_true, y_pred, y_prob
 
+
+if __name__ == "__main__":
+    rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, rnn_model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, rnn_model)
+    print(rnn_model)
+    print("Number of parameters: ", sum(p.numel() for p in rnn_model.parameters()))
+
+    lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
+    print(lstm_model)
+    print("Number of parameters: ", sum(p.numel() for p in lstm_model.parameters()))
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, lstm_model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, lstm_model)
+
+    gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+    print(gru_model)
+    print("Number of parameters: ", sum(p.numel() for p in gru_model.parameters()))
+    print("Checking accuracy on Training Set")
+    check_accuracy(train_loader, gru_model)
+    print("Checking accuracy on Testing Set")
+    check_accuracy(test_loader, gru_model)
