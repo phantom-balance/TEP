@@ -18,7 +18,7 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 5
 load_model = True
-small_data_size = 200
+small_data_size = 5
 
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
@@ -78,11 +78,7 @@ def rnn_load_checkpoint(checkpoint):
 
 
 def rnn_summary_return(DATA):
-    print("Checking accuracy on Training Set")
-    check_accuracy(train_loader, rnn_model)
-    print("Checking accuracy on Testing Set")
-    check_accuracy(test_loader, rnn_model)
-    
+
     rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
 
     y_true = []
@@ -90,6 +86,8 @@ def rnn_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, rnn_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
@@ -106,6 +104,8 @@ def rnn_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, rnn_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
@@ -158,10 +158,6 @@ def lstm_load_checkpoint(checkpoint):
 
 
 def lstm_summary_return(DATA):
-    print("Checking accuracy on Training Set")
-    check_accuracy(train_loader, lstm_model)
-    print("Checking accuracy on Testing Set")
-    check_accuracy(test_loader, lstm_model)
 
     lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
 
@@ -170,6 +166,8 @@ def lstm_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, lstm_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
@@ -186,6 +184,8 @@ def lstm_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, lstm_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
@@ -237,10 +237,6 @@ def gru_load_checkpoint(checkpoint):
 
 
 def gru_summary_return(DATA):
-    print("Checking accuracy on Training Set")
-    check_accuracy(train_loader, gru_model)
-    print("Checking accuracy on Testing Set")
-    check_accuracy(test_loader, gru_model)
 
     gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
 
@@ -249,6 +245,8 @@ def gru_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print("Checking accuracy on Training Set")
+        check_accuracy(train_loader, gru_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
@@ -265,6 +263,8 @@ def gru_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print("Checking accuracy on Testing Set")
+        check_accuracy(test_loader, gru_model)
         print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
