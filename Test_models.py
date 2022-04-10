@@ -266,7 +266,7 @@ print("Checking accuracy on Testing Set")
 check_accuracy(test_loader, gru_model)
 
 
-def lstm_summary_return(DATA):
+def gru_summary_return(DATA):
     print("Checking accuracy on Training Set")
     check_accuracy(train_loader, gru_model)
     print("Checking accuracy on Testing Set")
