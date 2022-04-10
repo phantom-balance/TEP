@@ -9,11 +9,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class GRU(nn.Module):
-    def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
+    def __init__(self, feature_length, sequence_length, hidden_size, num_layers, num_classes):
         super(GRU,self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
+        self.gru = nn.GRU(feature_length, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
 
     def forward(self, x):
@@ -25,7 +25,7 @@ class GRU(nn.Module):
         return out
 
 
-input_size = 52
+feature_length = 52
 sequence_length = 5
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
@@ -37,7 +37,7 @@ batch_size = 50
 load_model = True
 small_data_size = 10
 
-model = GRU(input_size=input_size,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
+model = GRU(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])

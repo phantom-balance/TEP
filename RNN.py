@@ -9,11 +9,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class RNN(nn.Module):
-    def __init__(self, input_size, sequence_length, hidden_size, num_layers, num_classes):
+    def __init__(self, feature_length, sequence_length, hidden_size, num_layers, num_classes):
         super(RNN,self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)
+        self.rnn = nn.RNN(feature_length, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
 
     def forward(self, x):
@@ -25,7 +25,7 @@ class RNN(nn.Module):
         return out
 
 
-input_size = 52
+feature_length = 52
 sequence_length = 5
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
