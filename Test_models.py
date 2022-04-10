@@ -87,7 +87,7 @@ def rnn_summary_return(DATA):
     if DATA == "train":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print(f'{100*(float(batch_idx)/(len(train_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = rnn_model(data)
@@ -103,7 +103,7 @@ def rnn_summary_return(DATA):
     elif DATA == "test":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print(f'{100*(float(batch_idx)/(len(test_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = rnn_model(data)
@@ -167,7 +167,7 @@ def lstm_summary_return(DATA):
     if DATA == "train":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print(f'{100*(float(batch_idx)/(len(train_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = lstm_model(data)
@@ -183,7 +183,7 @@ def lstm_summary_return(DATA):
     elif DATA == "test":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print(f'{100*(float(batch_idx)/(len(test_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = lstm_model(data)
@@ -246,7 +246,7 @@ def gru_summary_return(DATA):
     if DATA == "train":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print(f'{100*(float(batch_idx)/(len(train_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = gru_model(data)
@@ -262,7 +262,7 @@ def gru_summary_return(DATA):
     elif DATA == "test":
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print(f'{100*(float(batch_idx)/(len(test_set)/batch_size)):.3f} completed')
+                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = gru_model(data)
