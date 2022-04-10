@@ -283,12 +283,12 @@ def gru_summary_return(DATA):
 
 if __name__ == "__main__":
     rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
+    print(rnn_model)
+    print("Number of parameters: ", sum(p.numel() for p in rnn_model.parameters()))
     print("Checking accuracy on Training Set")
     check_accuracy(train_loader, rnn_model)
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, rnn_model)
-    print(rnn_model)
-    print("Number of parameters: ", sum(p.numel() for p in rnn_model.parameters()))
 
     lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
     print(lstm_model)
