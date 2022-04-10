@@ -46,7 +46,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
 
 
-def save_checkpoint(state, filename="LSTM_TEP.pth.tar"):
+def save_checkpoint(state, filename="model/LSTM_TEP.pth.tar"):
     print("__Saving Checkpoint__")
     torch.save(state, filename)
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
     if load_model == True:
-        load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
+        load_checkpoint(torch.load("model/LSTM_TEP.pth.tar"))
 
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
         # for batch_idx, (data, targets) in enumerate(train_loader):
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 def summary_return(DATA):
     Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
     Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
-    load_checkpoint(torch.load("LSTM_TEP.pth.tar"))
+    load_checkpoint(torch.load("model/LSTM_TEP.pth.tar"))
 
     y_true = []
     y_pred = []

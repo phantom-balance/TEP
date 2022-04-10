@@ -44,7 +44,7 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 
 # Saving and Loading the model parameters
-def save_checkpoint(state, filename="NN_TEP.pth.tar"):
+def save_checkpoint(state, filename="model/NN_TEP.pth.tar"):
     print("__Saving Checkpoint__")
     torch.save(state, filename)
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
     if load_model == True:
-        load_checkpoint(torch.load("NN_TEP.pth.tar"))
+        load_checkpoint(torch.load("model/NN_TEP.pth.tar"))
 
     # Training Network
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 def summary_return(DATA):
     Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
     Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
-    load_checkpoint(torch.load("NN_TEP.pth.tar"))
+    load_checkpoint(torch.load("model/NN_TEP.pth.tar"))
 
     y_true = []
     y_pred = []
