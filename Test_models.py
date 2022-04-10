@@ -18,7 +18,7 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 5
 load_model = True
-small_data_size = 700
+small_data_size = 500
 
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
@@ -158,7 +158,7 @@ def lstm_summary_return(DATA):
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, lstm_model)
 
-    rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
+    lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []
@@ -237,7 +237,7 @@ def gru_summary_return(DATA):
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, gru_model)
 
-    rnn_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+    gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []
