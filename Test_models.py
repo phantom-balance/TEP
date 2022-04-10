@@ -18,7 +18,7 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 5
 load_model = True
-small_data_size = 10
+small_data_size = 700
 
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
