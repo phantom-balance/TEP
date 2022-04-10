@@ -18,7 +18,7 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 5
 load_model = True
-small_data_size = 500
+small_data_size = 200
 
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
@@ -85,9 +85,9 @@ def rnn_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = rnn_model(data)
@@ -101,9 +101,9 @@ def rnn_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = rnn_model(data)
@@ -165,9 +165,9 @@ def lstm_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = lstm_model(data)
@@ -181,9 +181,9 @@ def lstm_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = lstm_model(data)
@@ -244,9 +244,9 @@ def gru_summary_return(DATA):
     y_prob = torch.double
 
     if DATA == "train":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(train_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = gru_model(data)
@@ -260,9 +260,9 @@ def gru_summary_return(DATA):
                 y_pred.extend(predictions)
                 y_true.extend(labels)
     elif DATA == "test":
+        print('computing......')
         with torch.no_grad():
             for batch_idx, (data, labels) in enumerate(test_loader):
-                print('computing......')
                 data = data.to(device=device)
                 labels = labels.to(device=device)
                 scores = gru_model(data)
