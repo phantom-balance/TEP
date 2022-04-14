@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from seqloader import TEP
-from torch.utils.data import random_split
+import pickle
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -35,14 +35,15 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 50
 load_model = True
-small_data_size = 10
 
 model = GRU(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
-small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
-small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
+
+
+small_train_set = pickle.load(open("sample_data/small_train10.p", "rb"))
+small_test_set = pickle.load(open("sample_data/small_test10.p", "rb"))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)

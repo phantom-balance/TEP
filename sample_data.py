@@ -36,41 +36,42 @@ small_test_set50, remain_test50 = random_split(remain_test100, [small_data_size5
 small_train_set10, remain_train10 = random_split(remain_train50, [small_data_size10, len(remain_train50)-small_data_size10])
 small_test_set10, remain_test10 = random_split(remain_test50, [small_data_size10, len(remain_test50)-small_data_size10])
 
-with open('sample_data/small_test2000.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}train_set_all.p', 'wb') as f:
+    pickle.dump(train_set_all, f)
+with open(f'sample_data/{sequence_length}test_set_all.p', 'wb') as f:
+    pickle.dump(test_set_all, f)
+
+with open(f'sample_data/{sequence_length}small_test2000.p', 'wb') as f:
     pickle.dump(small_test_set2000, f)
-with open('sample_data/small_train2000.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train2000.p', 'wb') as f:
     pickle.dump(small_train_set2000, f)
 
-with open('sample_data/small_test1000.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test1000.p', 'wb') as f:
     pickle.dump(small_test_set1000, f)
-with open('sample_data/small_train1000.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train1000.p', 'wb') as f:
     pickle.dump(small_train_set1000, f)
 
-with open('sample_data/small_test500.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test500.p', 'wb') as f:
     pickle.dump(small_test_set500, f)
-with open('sample_data/small_train500.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train500.p', 'wb') as f:
     pickle.dump(small_train_set500, f)
 
-with open('sample_data/small_test200.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test200.p', 'wb') as f:
     pickle.dump(small_test_set200, f)
-with open('sample_data/small_train200.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train200.p', 'wb') as f:
     pickle.dump(small_train_set200, f)
 
-with open('sample_data/small_test100.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test100.p', 'wb') as f:
     pickle.dump(small_test_set100, f)
-with open('sample_data/small_train100.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train100.p', 'wb') as f:
     pickle.dump(small_train_set100, f)
 
-with open('sample_data/small_test50.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test50.p', 'wb') as f:
     pickle.dump(small_test_set50, f)
-with open('sample_data/small_train50.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train50.p', 'wb') as f:
     pickle.dump(small_train_set50, f)
 
-with open('sample_data/small_test10.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_test10.p', 'wb') as f:
     pickle.dump(small_test_set10, f)
-with open('sample_data/small_train10.p', 'wb') as f:
+with open(f'sample_data/{sequence_length}small_train10.p', 'wb') as f:
     pickle.dump(small_train_set10, f)
-
-
-# hel = pickle.load(open("sample_data/small_test10.p", "rb"))
-# print(len(hel))
