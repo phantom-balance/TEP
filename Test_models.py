@@ -79,7 +79,7 @@ def rnn_load_checkpoint(checkpoint):
 
 def rnn_summary_return(DATA):
 
-    rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
+    rnn_load_checkpoint(torch.load(f"model/RNN_TEP_{sequence_length}.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []
@@ -159,7 +159,7 @@ def lstm_load_checkpoint(checkpoint):
 
 def lstm_summary_return(DATA):
 
-    lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
+    lstm_load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []
@@ -238,7 +238,7 @@ def gru_load_checkpoint(checkpoint):
 
 def gru_summary_return(DATA):
 
-    gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+    gru_load_checkpoint(torch.load(f"model/GRU_TEP_{sequence_length}.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []
@@ -287,7 +287,7 @@ def gru_summary_return(DATA):
 
 
 if __name__ == "__main__":
-    rnn_load_checkpoint(torch.load("model/RNN_TEP.pth.tar", map_location=device))
+    rnn_load_checkpoint(torch.load(f"model/RNN_TEP_{sequence_length}.pth.tar", map_location=device))
     print(rnn_model)
     print("Number of parameters: ", sum(p.numel() for p in rnn_model.parameters()))
     print("Checking accuracy on Training Set")
@@ -295,7 +295,7 @@ if __name__ == "__main__":
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, rnn_model)
 
-    lstm_load_checkpoint(torch.load("model/LSTM_TEP.pth.tar", map_location=device))
+    lstm_load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
     print(lstm_model)
     print("Number of parameters: ", sum(p.numel() for p in lstm_model.parameters()))
     print("Checking accuracy on Training Set")
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     print("Checking accuracy on Testing Set")
     check_accuracy(test_loader, lstm_model)
 
-    gru_load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+    gru_load_checkpoint(torch.load(f"model/GRU_TEP_{sequence_length}.pth.tar", map_location=device))
     print(gru_model)
     print("Number of parameters: ", sum(p.numel() for p in gru_model.parameters()))
     print("Checking accuracy on Training Set")

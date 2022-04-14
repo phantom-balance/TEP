@@ -18,7 +18,7 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 50
 load_model = True
-small_data_size = 10
+small_data_size = 50
 
 class NN(nn.Module):
     def __init__(self, input_size, num_classes):
@@ -162,6 +162,7 @@ def summary_return(DATA):
         print("enter either test or false")
 
     return y_true, y_pred, y_prob
+
 
 print("Checking accuracy on Training Set")
 check_accuracy(train_loader, model)

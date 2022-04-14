@@ -42,14 +42,14 @@ train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
 
-small_train_set = pickle.load(open("sample_data/small_train10.p", "rb"))
-small_test_set = pickle.load(open("sample_data/small_test10.p", "rb"))
+small_train_set = pickle.load(open(f"sample_data/{sequence_length}small_train10.p", "rb"))
+small_test_set = pickle.load(open(f"sample_data/{sequence_length}small_test10.p", "rb"))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(),learning_rate)
 
 
-def save_checkpoint(state, filename="model/GRU_TEP.pth.tar"):
+def save_checkpoint(state, filename=f"model/GRU_TEP_{sequence_length}.pth.tar"):
     print("__Saving Checkpoint__")
     torch.save(state, filename)
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     test_loader = DataLoader(dataset=small_test_set, batch_size=batch_size, shuffle=True)
 
     if load_model == True:
-        load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+        load_checkpoint(torch.load(f"model/GRU_TEP_{sequence_length}.pth.tar", map_location=device))
 
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
         # for batch_idx, (data, targets) in enumerate(train_loader):
@@ -108,6 +108,10 @@ if __name__ == "__main__":
                           'optimizer': optimizer.state_dict()
                           }
             save_checkpoint(checkpoint)
+            print("Checking accuracy on Testing Set")
+            check_accuracy(test_loader, model)
+            print("Checking accuracy on Training Set")
+            check_accuracy(train_loader, model)
 
 
 # for performance_metric
@@ -120,7 +124,7 @@ def summary_return(DATA):
     Train_loader = DataLoader(dataset=small_train_set, batch_size=50, shuffle=False)
     Test_loader = DataLoader(dataset=small_test_set, batch_size=50, shuffle=False)
 
-    load_checkpoint(torch.load("model/GRU_TEP.pth.tar", map_location=device))
+    load_checkpoint(torch.load("model/GRU_TEP_5.pth.tar", map_location=device))
 
     y_true = []
     y_pred = []

@@ -15,6 +15,29 @@ small_data_size2000 = 2000
 train_set_all = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set_all = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
+
+def small_data_maker(small_data_size, sequence_length, is_complete_data=None):
+    '''
+    :param small_data_size: size of the small sample data from the entire dataset
+    :param sequence_length: sequence length of the data
+    :param is_complete_data: if True, returns the entire dataset and labels
+    :return: returns either the entire or smaller dataset {train_data, test_data} in that order
+    '''
+
+    train_set_all = TEP(num=Type, sequence_length=sequence_length, is_train=True)
+    test_set_all = TEP(num=Type, sequence_length=sequence_length, is_train=False)
+    small_test_set, _ = random_split(train_set_all, [small_data_size, len(train_set_all)-small_data_size])
+    small_train_set, _ = random_split(test_set_all, [small_data_size, len(test_set_all)-small_data_size])
+    if is_complete_data:
+        train_data = train_set_all
+        test_data = test_set_all
+    else:
+        train_data = small_train_set
+        test_data = small_test_set
+
+    return train_data, test_data
+
+
 small_train_set2000, remain_train2000 = random_split(train_set_all, [small_data_size2000, len(train_set_all)-small_data_size2000])
 small_test_set2000, remain_test2000 = random_split(test_set_all, [small_data_size2000, len(test_set_all)-small_data_size2000])
 
