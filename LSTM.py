@@ -43,11 +43,11 @@ model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidde
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
-small_train_set = pickle.load(open(f"sample_data/{sequence_length}small_train10.p", "rb"))
-small_test_set = pickle.load(open(f"sample_data/{sequence_length}small_test10.p", "rb"))
+small_train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_small.p", "rb"))
+small_test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_small.p", "rb"))
 
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(),learning_rate)
+optimizer = optim.Adam(model.parameters(), learning_rate)
 
 
 def save_checkpoint(state, filename=f"model/LSTM_TEP_{sequence_length}.pth.tar"):

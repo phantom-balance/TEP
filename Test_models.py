@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from seqloader import TEP
-from torch.utils.data import random_split
+from sample_data import small_data_maker
+import pickle
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -18,13 +18,15 @@ learning_rate = 0.001
 num_epochs = 0
 batch_size = 100
 load_model = True
-small_data_size = 5
+small_data_size = 100
 
+# uncomment this to create new small_data_size, otherwise the previous will be loaded
+# small_data_maker(small_data_size, sequence_length)
 
-train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
-small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
-test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
-small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
+train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_all.p", "rb"))
+test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_all.p", "rb"))
+small_train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_small.p", "rb"))
+small_test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_small.p", "rb"))
 
 train_loader = DataLoader(dataset=small_train_set, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(dataset=small_test_set, batch_size=batch_size, shuffle=True)
