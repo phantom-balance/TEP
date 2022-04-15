@@ -31,3 +31,12 @@ def small_data_maker(small_data_size, sequence_length):
         pickle.dump(small_train_set, f)
     with open(f'processed_data/{sequence_length}-test_set_small.p', 'wb') as f:
         pickle.dump(small_test_set, f)
+
+
+# small_data_maker(100, 5)
+
+'''
+arguments (custom data size, sequence length )
+this will over ride into the file  processed_data/{sequence_length}-train_set_small.p
+everytime it is executed with the current data_size argument passed
+'''

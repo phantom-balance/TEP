@@ -20,8 +20,6 @@ batch_size = 100
 load_model = True
 small_data_size = 100
 
-# uncomment this to create new small_data_size, otherwise the previous will be loaded
-# small_data_maker(small_data_size, sequence_length)
 
 train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_all.p", "rb"))
 test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_all.p", "rb"))
