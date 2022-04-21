@@ -12,7 +12,7 @@ for idx, sequence_length in enumerate(sequence_length_list):
     all_train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
     all_test_set = TEP(num=Type, sequence_length= sequence_length, is_train=False)
 
-    small_test_set = random_split(all_train_set, [small_data_size, len(all_test_set)-small_data_size])
+    small_test_set = random_split(all_test_set, [small_data_size, len(all_test_set)-small_data_size])
     small_train_set, _ = random_split(all_train_set, [small_data_size, len(all_train_set)-small_data_size])
     with open(f'processed_data/{sequence_length}-train_set_small{small_data_size}.p', 'wb') as f:
         pickle.dump(small_train_set, f)
