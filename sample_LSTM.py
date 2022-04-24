@@ -111,7 +111,7 @@ if __name__ == "__main__":
         optimizer.step()
 
         # saving model after 5 epochs worth of training
-        if epoch % 5 == 0:
+        if epoch % 2 == 0:
             checkpoint = {'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()
                           }
