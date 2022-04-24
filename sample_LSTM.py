@@ -44,10 +44,10 @@ sequence_length = 5
 learning_rate = 0.001
 batch_size = 10
 
-print(f"seq_length{sequence_length}")
-print(f"learning_rate{learning_rate}")
-print(f"batch_size{batch_size}")
-print(f"")
+print(f"seq_length:{sequence_length}")
+print(f"learning_rate:{learning_rate}")
+print(f"batch_size:{batch_size}")
+
 model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
