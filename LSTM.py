@@ -46,6 +46,8 @@ test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 small_train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_small.p", "rb"))
 small_test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_small.p", "rb"))
 
+print(small_train_set[0])
+
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
 
