@@ -122,4 +122,3 @@ if __name__ == "__main__":
             print("Checking accuracy on Training Set")
             check_accuracy(train_loader, model)
 
-
