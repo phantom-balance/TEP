@@ -6,6 +6,7 @@ from torch.utils.data import SubsetRandomSampler
 from seqloader import TEP
 import pickle
 
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -37,12 +38,13 @@ hidden_size = 40
 
 # loading model
 load_model = False
-num_epochs = 100
+num_epochs = 10
 
 # Tunings
 sequence_length = 5
 learning_rate = 0.001
-batch_size = 5
+batch_size = 10
+
 
 model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
@@ -86,6 +88,21 @@ def check_accuracy(loader, model):
     model.train()
 
 
+def loss_check(loader, model):
+    loss_sum = 0
+    with torch.no_grad():
+        k = 0
+        for Data, Targets in loader:
+            Data = Data.to(device=device)
+            Targets = Targets.to(device=device)
+            scores = model(Data)
+            loss = criterion(scores, Targets)
+            loss_sum+=loss
+            k+=1
+        loss_av= loss_sum/k
+        return loss_av
+
+
 if __name__ == "__main__":
 
     # To load the entire dataset:
@@ -96,29 +113,36 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(train_indices))
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(test_indices))
 
+    train_loss = []
+    test_loss = []
+
     if load_model == True:
         load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
 
-    for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
-        # for batch_idx, (data, targets) in enumerate(train_loader):
-        data, targets = next(iter(train_loader))
-        data = data.to(device=device).squeeze(1)
-        targets = targets.to(device=device)
-        scores = model(data)
-        loss = criterion(scores,targets)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+    def train():
+        for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
+            for batch_idx, (data, targets) in enumerate(train_loader):
+                # data, targets = next(iter(train_loader))
+                data = data.to(device=device).squeeze(1)
+                targets = targets.to(device=device)
+                scores = model(data)
+                loss = criterion(scores,targets)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-        # saving model after 2 epochs worth of training
-        if epoch % 2 == 0:
-            checkpoint = {'state_dict': model.state_dict(),
-                          'optimizer': optimizer.state_dict()
-                          }
-            save_checkpoint(checkpoint)
-            print(f"Epoch no:{epoch}")
-            print("Checking accuracy on Testing Set")
-            check_accuracy(test_loader, model)
-            print("Checking accuracy on Training Set")
-            check_accuracy(train_loader, model)
+            # saving model after 2 epochs worth of training
+            if epoch % 2 == 0:
+                checkpoint = {'state_dict': model.state_dict(),
+                              'optimizer': optimizer.state_dict()
+                              }
+                print("Epoch no:",epoch)
+                save_checkpoint(checkpoint)
+                test_loss_temp=loss_check(test_loader,model)
+                test_loss.append(test_loss_temp)
+                train_loss_temp=loss_check(test_loader,model)
+                train_loss.append(train_loss_temp)
+                print("Train_Loss:",train_loss_temp)
+                print("Test_Loss:",test_loss_temp)
 
+        return train_loss, test_loss

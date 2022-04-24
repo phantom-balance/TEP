@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from seqloader import TEP
-import pickle
+from torch.utils.data import random_split
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -43,10 +43,8 @@ model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidde
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
-small_train_set = pickle.load(open(f"processed_data/{sequence_length}-train_set_small.p", "rb"))
-small_test_set = pickle.load(open(f"processed_data/{sequence_length}-test_set_small.p", "rb"))
-
-print(small_train_set[0])
+small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
+small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
@@ -69,7 +67,7 @@ def check_accuracy(loader,model):
     model.eval()
     with torch.no_grad():
         for Data, Targets in loader:
-            Data = Data.to(device=device).squeeze(1)
+            Data = Data.to(device=device)
             Targets = Targets.to(device=device)
             scores = model(Data)
 
@@ -97,7 +95,7 @@ if __name__ == "__main__":
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
         # for batch_idx, (data, targets) in enumerate(train_loader):
         data, targets = next(iter(train_loader))
-        data = data.to(device=device).squeeze(1)
+        data = data.to(device=device)
         targets = targets.to(device=device)
         scores = model(data)
         loss = criterion(scores,targets)
@@ -115,6 +113,7 @@ if __name__ == "__main__":
             check_accuracy(test_loader, model)
             print("Checking accuracy on Training Set")
             check_accuracy(train_loader, model)
+
 
 # for performance_metric
 def summary_return(DATA):
