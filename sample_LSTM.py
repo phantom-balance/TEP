@@ -93,8 +93,8 @@ if __name__ == "__main__":
     # test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
     # To try out in a small dataset, for quick computation:
-    train_loader = DataLoader(train_set, batch_size=2, shuffle=False, sampler=SubsetRandomSampler(train_indices))
-    test_loader = DataLoader(test_set, batch_size=2, shuffle=False, sampler=SubsetRandomSampler(test_indices))
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(train_indices))
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(test_indices))
 
     if load_model == True:
         load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
