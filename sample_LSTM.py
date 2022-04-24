@@ -105,15 +105,13 @@ def loss_check(loader,model):
         loss_av= loss_sum/k
         return loss_av
 
+
 # To load the entire dataset:
 # train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
 # test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
-
 # To try out in a small dataset, for quick computation:
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(train_indices))
 test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(test_indices))
-
-
 
 if load_model == True:
     load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
