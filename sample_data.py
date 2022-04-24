@@ -5,7 +5,7 @@ from seqloader import TEP
 
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 sequence_length_list = [3, 4, 5, 6, 7, 8, 9]
-small_data_size = 3500
+small_data_size = 2500
 
 for idx, sequence_length in enumerate(sequence_length_list):
     train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)

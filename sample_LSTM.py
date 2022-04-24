@@ -110,7 +110,7 @@ if __name__ == "__main__":
         loss.backward()
         optimizer.step()
 
-        # saving model after 5 epochs worth of training
+        # saving model after 2 epochs worth of training
         if epoch % 2 == 0:
             checkpoint = {'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()
