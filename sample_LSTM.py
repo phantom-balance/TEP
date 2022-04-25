@@ -121,6 +121,8 @@ def train():
     train_loss = []
     test_loss = []
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
+        train_loss_sum = 0
+        k = 0
         for batch_idx, (data, targets) in enumerate(train_loader):
             # data, targets = next(iter(train_loader))
             data = data.to(device=device)
@@ -130,7 +132,9 @@ def train():
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
+            train_loss_sum+= float(loss)
+            k+=1
+        train_loss.append(train_loss_sum/k)
         # saving model after 2 epochs worth of training
         if epoch % 2 == 0:
             checkpoint = {'state_dict': model.state_dict(),
@@ -140,10 +144,6 @@ def train():
             save_checkpoint(checkpoint)
             test_loss_temp=float(loss_check(test_loader,model))
             test_loss.append(test_loss_temp)
-            train_loss_temp=float(loss_check(train_loader,model))
-            train_loss.append(train_loss_temp)
-            print("Train_Loss:",train_loss_temp)
-            print("Test_Loss:",test_loss_temp)
 
     return train_loss, test_loss
 
