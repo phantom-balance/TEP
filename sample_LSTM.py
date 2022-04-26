@@ -141,7 +141,7 @@ def train():
                           }
             print("Epoch no:",epoch)
             save_checkpoint(checkpoint)
-            test_loss_temp=float(loss_check(test_loader,model))
+            test_loss_temp=float(loss_check(valid_loader,model))
             test_loss.append(test_loss_temp)
 
     return train_loss, test_loss
