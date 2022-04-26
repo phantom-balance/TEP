@@ -50,7 +50,7 @@ train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
 train_indices = pickle.load(open(f"processed_data/{sequence_length}-train_set_index.p", "rb"))
-test_indices = pickle.load(open(f"processed_data/{sequence_length}-valid_set_index.p", "rb"))
+valid_indices = pickle.load(open(f"processed_data/{sequence_length}-valid_set_index.p", "rb"))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
@@ -107,7 +107,7 @@ def loss_check(loader,model):
 # test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 # To try out in a small dataset, for quick computation:
 train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(train_indices))
-test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(test_indices))
+valid_loader = DataLoader(train_set, batch_size=batch_size, shuffle=False, sampler=SubsetRandomSampler(valid_indices))
 
 if load_model == True:
     load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
