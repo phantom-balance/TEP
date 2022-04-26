@@ -5,19 +5,20 @@ from seqloader import TEP
 
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 sequence_length_list = [3, 4, 5, 6, 7, 8, 9]
-small_data_size = 2500
+small_data_size = 500
 
 for idx, sequence_length in enumerate(sequence_length_list):
     train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
     test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
-    small_train_index = random.sample(range(0, len(train_set)-1),small_data_size)
-    small_test_index = random.sample(range(0, len(test_set)-1),small_data_size)
-    # print(small_test_index)
-    # print(small_train_index)
+    all_train_index = [*range(0,len(train_set))]
+    random.shuffle(all_train_index)
+    random.shuffle(all_train_index)
+    small_train_index = random.sample(all_train_index[:int(len(all_train_index)/2)],small_data_size)
+    small_valid_index = random.sample(all_train_index[int(len(all_train_index)/2):],small_data_size)
     with open(f'processed_data/{sequence_length}-train_set_index.p', 'wb') as f:
         pickle.dump(small_train_index, f)
-    with open(f'processed_data/{sequence_length}-test_set_index.p', 'wb') as f:
-        pickle.dump(small_test_index, f)
+    with open(f'processed_data/{sequence_length}-valid_set_index.p', 'wb') as f:
+        pickle.dump(small_valid_index, f)
 
 
 # for idx, sequence_length in enumerate(sequence_length_list):

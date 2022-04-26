@@ -37,16 +37,12 @@ hidden_size = 40
 
 # loading model
 load_model = False
-num_epochs = 10
+num_epochs = 30
 
 # Tunings
 sequence_length = 5
 learning_rate = 0.001
-batch_size = 10
-
-print(f"seq_length:{sequence_length}")
-print(f"learning_rate:{learning_rate}")
-print(f"batch_size:{batch_size}")
+batch_size = 32
 
 model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
@@ -54,7 +50,7 @@ train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
 train_indices = pickle.load(open(f"processed_data/{sequence_length}-train_set_index.p", "rb"))
-test_indices = pickle.load(open(f"processed_data/{sequence_length}-test_set_index.p", "rb"))
+test_indices = pickle.load(open(f"processed_data/{sequence_length}-valid_set_index.p", "rb"))
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
@@ -120,6 +116,9 @@ if load_model == True:
 def train():
     train_loss = []
     test_loss = []
+    print(f"seq_length:{sequence_length}")
+    print(f"learning_rate:{learning_rate}")
+    print(f"batch_size:{batch_size}")
     for epoch in range(num_epochs): # Here epoch doesn't mean going through the entire dataset
         train_loss_sum = 0
         k = 0
