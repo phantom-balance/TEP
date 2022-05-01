@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from seqloader import TEP
-from torch.utils.data import random_split
+# from torch.utils.data import random_split
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -27,24 +27,24 @@ class LSTM(nn.Module):
 
 
 feature_length = 52
-sequence_length = 5
+sequence_length = 8
 Type = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 num_classes = 22
 num_layers = 2
 hidden_size = 40
 learning_rate = 0.001
-num_epochs = 0
-batch_size = 50
-load_model = True
-small_data_size = 10
+num_epochs = 1142
+batch_size = 64
+load_model = False
+# small_data_size = 10
 
 model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
 
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
-small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
-small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
+# small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
+# small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), learning_rate)
@@ -82,12 +82,12 @@ def check_accuracy(loader,model):
 if __name__ == "__main__":
 
     # To load the entire dataset:
-    # train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
-    # test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
 
     # To try out in a small dataset, for quick computation:
-    train_loader = DataLoader(dataset=small_train_set, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(dataset=small_test_set, batch_size=batch_size, shuffle=True)
+    # train_loader = DataLoader(dataset=small_train_set, batch_size=batch_size, shuffle=True)
+    # test_loader = DataLoader(dataset=small_test_set, batch_size=batch_size, shuffle=True)
 
     if load_model == True:
         load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
@@ -104,15 +104,16 @@ if __name__ == "__main__":
         optimizer.step()
 
         # saving model after 5 epochs worth of training
-        if epoch % 5 == 0:
+        
+        if epoch % 50 == 0:
             checkpoint = {'state_dict': model.state_dict(),
                           'optimizer': optimizer.state_dict()
                           }
             save_checkpoint(checkpoint)
-            print("Checking accuracy on Testing Set")
-            check_accuracy(test_loader, model)
-            print("Checking accuracy on Training Set")
-            check_accuracy(train_loader, model)
+            # print("Checking accuracy on Testing Set")
+            # check_accuracy(test_loader, model)
+            # print("Checking accuracy on Training Set")
+            # check_accuracy(train_loader, model)
 
 
 # for performance_metric
@@ -169,7 +170,7 @@ def summary_return(DATA):
     return y_true, y_pred, y_prob
 
 
-print("Checking accuracy on Training Set")
-check_accuracy(train_loader, model)
-print("Checking accuracy on Testing Set")
-check_accuracy(test_loader, model)
+# print("Checking accuracy on Training Set")
+# check_accuracy(train_loader, model)
+# print("Checking accuracy on Testing Set")
+# check_accuracy(test_loader, model)
