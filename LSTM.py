@@ -43,9 +43,6 @@ model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidde
 train_set = TEP(num=Type, sequence_length=sequence_length, is_train=True)
 test_set = TEP(num=Type, sequence_length=sequence_length, is_train=False)
 
-print(f"sequence_length={sequence_length},lr={learning_rate},batch_size={batch_first}")
-print(f"num_layers={num_layers},hidden_size={hidden_size}")
-
 # small_train_set, _ = random_split(train_set, [small_data_size, len(train_set)-small_data_size])
 # small_test_set, _ = random_split(test_set, [small_data_size, len(test_set)-small_data_size])
 
@@ -87,6 +84,9 @@ if __name__ == "__main__":
     # To load the entire dataset:
     train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=True)
+
+    print(f"sequence_length={sequence_length},lr={learning_rate},batch_size={batch_size}")
+    print(f"num_layers={num_layers},hidden_size={hidden_size}")
 
     # To try out in a small dataset, for quick computation:
     # train_loader = DataLoader(dataset=small_train_set, batch_size=batch_size, shuffle=True)
