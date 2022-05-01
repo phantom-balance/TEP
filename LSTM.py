@@ -35,7 +35,7 @@ hidden_size = 40
 learning_rate = 0.001
 num_epochs = 1142
 batch_size = 64
-load_model = False
+load_model = True
 # small_data_size = 10
 
 model = LSTM(feature_length=feature_length,sequence_length=sequence_length,hidden_size=hidden_size,num_layers=num_layers,num_classes=num_classes).to(device=device)
