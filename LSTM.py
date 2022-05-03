@@ -33,7 +33,7 @@ num_classes = 22
 num_layers = 2
 hidden_size = 40
 learning_rate = 0.001
-num_epochs = 1142
+num_epochs = 0
 batch_size = 64
 load_model = True
 # small_data_size = 10
@@ -122,12 +122,12 @@ if __name__ == "__main__":
 # for performance_metric
 def summary_return(DATA):
     # To check the summary in entire dataset:
-    # Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
-    # Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
+    Train_loader = DataLoader(dataset=train_set, batch_size=50, shuffle=False)
+    Test_loader = DataLoader(dataset=test_set, batch_size=50, shuffle=False)
 
     # To check only in the small dataset:
-    Train_loader = DataLoader(dataset=small_train_set, batch_size=50, shuffle=False)
-    Test_loader = DataLoader(dataset=small_test_set, batch_size=50, shuffle=False)
+    # Train_loader = DataLoader(dataset=small_train_set, batch_size=50, shuffle=False)
+    # Test_loader = DataLoader(dataset=small_test_set, batch_size=50, shuffle=False)
 
     load_checkpoint(torch.load(f"model/LSTM_TEP_{sequence_length}.pth.tar", map_location=device))
 
@@ -173,7 +173,7 @@ def summary_return(DATA):
     return y_true, y_pred, y_prob
 
 
-# print("Checking accuracy on Training Set")
-# check_accuracy(train_loader, model)
-# print("Checking accuracy on Testing Set")
-# check_accuracy(test_loader, model)
+print("Checking accuracy on Testing Set")
+check_accuracy(test_loader, model)
+print("Checking accuracy on Training Set")
+check_accuracy(train_loader, model)
